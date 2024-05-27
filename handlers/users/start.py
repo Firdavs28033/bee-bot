@@ -154,10 +154,12 @@ async def process_room_choice(callback_query: types.CallbackQuery, state: FSMCon
         elif room_choice == 28:
             max_seats = 3
         elif 29 <= room_choice <= 30:
-            max_seats = 4
+            max_seats = 6
         elif room_choice == 31:
             max_seats = 3
-        elif 32 <= room_choice <= 36:
+        elif 32 <= room_choice <= 33:
+            max_seats = 5
+        elif 34 <= room_choice <= 36:
             max_seats = 4
         elif room_choice == 37:
             max_seats = 3
