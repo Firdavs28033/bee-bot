@@ -140,24 +140,6 @@ async def process_room_choice(callback_query: types.CallbackQuery, state: FSMCon
     async with state.proxy() as data:
         data['room_choice'] = room_choice
 
-    await Form.next()
-    await callback_query.message.answer(f"Siz tanlagan xona: {room_choice}.",
-                                        reply_markup=types.ReplyKeyboardRemove())
-    await callback_query.message.answer("Iltimos, ushbu o'rinlardan birini tanlang (1-4):")
-
-
-# Seat choice handler
-@dp.message_handler(state=Form.seat_choice)
-async def process_seat_choice(message: types.Message, state: FSMContext):
-    seat_choice = message.text
-    if not seat_choice.isdigit():
-        await message.reply("Yaroqli joy raqamini kiriting.")
-        return
-
-    seat_choice = int(seat_choice)
-    async with state.proxy() as data:
-        room_choice = data['room_choice']
-
         # Determine the valid seat range based on room number
         if 3 <= room_choice <= 16:
             max_seats = 3
@@ -182,8 +164,28 @@ async def process_seat_choice(message: types.Message, state: FSMContext):
         elif 38 <= room_choice <= 47:
             max_seats = 2
         else:
-            await message.reply("Yaroqli xona raqamini kiriting.")
+            await callback_query.message.answer("Yaroqli xona raqamini kiriting.")
             return
+
+        data['max_seats'] = max_seats
+
+    await Form.next()
+    await callback_query.message.answer(f"Siz tanlagan xona: {room_choice}.", reply_markup=types.ReplyKeyboardRemove())
+    await callback_query.message.answer(f"Iltimos, ushbu o'rinlardan birini tanlang (1-{max_seats}):")
+
+
+# Seat choice handler
+@dp.message_handler(state=Form.seat_choice)
+async def process_seat_choice(message: types.Message, state: FSMContext):
+    seat_choice = message.text
+    if not seat_choice.isdigit():
+        await message.reply("Yaroqli joy raqamini kiriting.")
+        return
+
+    seat_choice = int(seat_choice)
+    async with state.proxy() as data:
+        room_choice = data['room_choice']
+        max_seats = data['max_seats']
 
         if not (1 <= seat_choice <= max_seats):
             await message.reply(f"Ushbu xonada {max_seats} ta joy bor. Yaroqli joy raqamini kiriting (1-{max_seats}).")
@@ -199,7 +201,7 @@ async def process_seat_choice(message: types.Message, state: FSMContext):
 
         if not seat_taken.empty:
             latest_booking_date = seat_taken['Band tugash sanasi'].max()
-            await message.reply(f"Ushbu joy  {latest_booking_date} sanagacha band qilingan. Iltimos boshqa o'rin tanlang.")
+            await message.reply(f"Ushbu joy {latest_booking_date} sanagacha band qilingan. Iltimos boshqa o'rin tanlang.")
             return
 
     await Form.next()
