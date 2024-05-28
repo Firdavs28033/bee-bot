@@ -4,7 +4,10 @@ from aiogram import types
 from aiogram.types import ParseMode
 from loader import dp, bot
 from data.config import ADMINS
-from .start import file_path
+
+
+file_path = "data/hisobot.xlsx"
+
 
 
 
