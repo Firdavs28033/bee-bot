@@ -1,3 +1,4 @@
+from . import delete
 from . import booked
 from . import help
 from . import start
