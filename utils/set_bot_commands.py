@@ -19,6 +19,8 @@ async def set_default_commands(dp):
         types.BotCommand("doc", "Xisobot"),
         types.BotCommand("booked", "Band qilingan xonalar"),
         types.BotCommand("id", "Xona band qilganlarni user idsi va ism-familiyasi"),
+        types.BotCommand("delete", "Band qilingan xonalarni o'chirish"),
+        types.BotCommand("del", "user idga tegishli band qilingan joyni o'chirish"),
     ]
 
     # Set commands for all users
