@@ -170,7 +170,7 @@ async def process_room_choice(callback_query: types.CallbackQuery, state: FSMCon
 
         data['max_seats'] = max_seats
 
-    await Form.next()
+    await Form.seat_choice.set()
     await callback_query.message.answer(f"Siz tanlagan xona: {room_choice}.", reply_markup=types.ReplyKeyboardRemove())
     await callback_query.message.answer(f"Iltimos, ushbu o'rinlardan birini tanlang (1-{max_seats}):")
 
@@ -205,7 +205,7 @@ async def process_seat_choice(message: types.Message, state: FSMContext):
             await message.reply(f"Ushbu joy {latest_booking_date} sanagacha band qilingan. Iltimos boshqa o'rin tanlang.")
             return
 
-    await Form.next()
+    await Form.booking_days.set()
     await message.reply("Ushbu o'rinni necha kungacha band qilmoqchisiz?")
 
 # Booking days handler
@@ -259,7 +259,7 @@ async def process_booking_days(message: types.Message, state: FSMContext):
     for admin in ADMINS:
         await bot.send_message(admin, f"Yangi foydalanuvchi qo'shildi:\n{user_info}")
 
-
-    state_data = await state.get_data()
-    if state_data:
-        await state.finish()
+    await state.finish()
+    # state_data = await state.get_data()
+    # if state_data:
+    #     await state.finish()
